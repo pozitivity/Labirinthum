@@ -17,18 +17,7 @@ public enum Storage {
 		public int val() { return 1080; }
 		public String getString() { return null; }
 	},
-	PATH_TARGET_TO_DATA {
-		public int val() { return 0; }
-		public String getString() { return "data/"; }
-	},
-	PATH_TARGET_TO_TEXTURE {
-		public int val() { return 0; }
-		public String getString() { return "texture/"; }
-	},
-	PATH_TARGET_TO_SOUND {
-		public int val() { return 0; }
-		public String getString() { return "sound/"; }
-	},
+	
 	PATH_PROJECTS_TO_TEXTURE {
 		public int val() { return 0; }
 		public String getString() { return "target/texture/"; }

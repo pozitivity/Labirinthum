@@ -7,28 +7,49 @@ public class GameState {
 		INTRO,
 		GAME,
 		MAIN_MENU,
-		ABOUT
+		ABOUT,
+		MAIN_MENU_INIT,
+		INTRO_INIT,
+		GAME_INIT,
+		ABOUT_INIT
 	}
 	
 	static State state;
+	static State oldState;
+	InitState initState = new InitState();
 	
 	public void checkState() {
 		switch(state) {
+		case INTRO_INIT:
+			initState.initIntro();
+			state = State.INTRO;
+			break;
 		case INTRO:
-			System.out.println("INTRO state");
+			break;
+		case GAME_INIT: 
+			initState.initGame();
+			state = State.GAME;
 			break;
 		case GAME:
-			System.out.println("GAME state");
+			break;
+		case MAIN_MENU_INIT:
+			initState.initMain();
+			state = State.MAIN_MENU;
 			break;
 		case MAIN_MENU:
-			System.out.println("MAIN_MENU state");
+			initState.drawMain();
+			break;
+		case ABOUT_INIT:
+			initState.initAbout();
+			state = State.ABOUT;
 			break;
 		case ABOUT:
-			System.out.println("ABOUT state");
 			break;
 		default:
 			break;
 		}
+		// запоминаем предыдущее состояние
+		oldState = state;
 	}
 
 	public static State getState() {

@@ -28,10 +28,10 @@ import com.tatiana.UseLWJGL.components.mainmenu.GameState;
 import com.tatiana.UseLWJGL.components.mainmenu.Menu;
 import com.tatiana.UseLWJGL.components.stars.Stars;
 import com.tatiana.UseLWJGL.components.world.WorldCore;
-import com.tatiana.UseLWJGL.event.EventKeyboard;
 import com.tatiana.UseLWJGL.event.EventMouse;
-import com.tatiana.UseLWJGL.sound.SoundManager;
+import com.tatiana.UseLWJGL.event.KeyboardEvent;
 import com.tatiana.UseLWJGL.sound.Sounds;
+import com.tatiana.UseLWJGL.sound.impl.SoundLoader;
 import com.tatiana.UseLWJGL.util.ParamsDisplay;
 import com.tatiana.UseLWJGL.util.Storage;
 
@@ -40,10 +40,10 @@ public class App {
 	
 	Draw draw = new Draw();
 	ParamsDisplay paramsDisplay = new ParamsDisplay();
-	EventKeyboard keyboard = new EventKeyboard();
+	KeyboardEvent keyboard = new KeyboardEvent();
 	EventMouse mouse = new EventMouse();
 	Light light = new Light();
-	SoundManager soundManager = new SoundManager();
+	SoundLoader soundLoader = new SoundLoader();
 	Stars stars = new Stars();
 	WorldCore world = new WorldCore();
 	//private Fonts font = new Fonts();
@@ -75,10 +75,6 @@ public class App {
 		//world.setupWorld();
 		//world.initWorld();
 		
-		menu.init();
-		
-		soundManager.loadOggStreaming(Sounds.TRY_WAV.getName());
-		
 		while(!paramsDisplay.isDone()) {
 			mainloop();
 			//draw.renderQuad();
@@ -87,8 +83,6 @@ public class App {
 			//font.draw("Hello", Color.yellow, 0.1f, 0.35f);
 			//room.renderRoom();
 			//sphere.render();
-			//Color.white.bind();
-			menu.draw();
 			
 			SoundStore.get().poll(1);
 			
@@ -106,12 +100,6 @@ public class App {
 			paramsDisplay.setDone(true);
 		}
 		keyboard.commonCheckKey();
-		//keyboard.drawCheckKey();
-		//keyboard.starsCheckKey();
-		//keyboard.worldCheckKey();
-		//keyboard.sphereCheckKey();
-		//keyboard.roomCheckKey();
-		//keyboard.stateCheckKey();
 		//mouse.commonCheckMouse();
 		mouse.menuCheckMouse();
 		state.checkState();
@@ -138,8 +126,8 @@ public class App {
 		
 		Display.setDisplayMode(displayMode);
 		Display.create();
-		
-		GameState.setState(GameState.State.MAIN_MENU);
+		// при первом запуске игры начальное состояние - меню
+		GameState.setState(GameState.State.MAIN_MENU_INIT);
 	}
 	
 	public void initGL() {
