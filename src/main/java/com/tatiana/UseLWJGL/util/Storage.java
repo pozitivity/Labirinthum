@@ -30,6 +30,14 @@ public enum Storage {
 		public int val() { return 0; }
 		public String getString() { return "target/data/"; }
 	},
+	PATH_PROJECTS_TO_FONTS {
+		public int val() { return 0; }
+		public String getString() { return "target/texture/util/fonts/"; }
+	},
+	PATH_PROJECTS_TO_SHADERS {
+		public int val() { return 0; }
+		public String getString() { return "target/shaders/"; }
+	},
 	PLAY_LEFT_X {
 		public int val() { return 550; }
 		public String getString() { return null; }

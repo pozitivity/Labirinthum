@@ -7,13 +7,18 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import com.tatiana.UseLWJGL.components.Light;
 import com.tatiana.UseLWJGL.components.entities.Entity;
+import com.tatiana.UseLWJGL.components.laby.Laby;
 import com.tatiana.UseLWJGL.util.LoaderTexture;
+import com.tatiana.UseLWJGL.util.Util;
 import com.tatiana.UseLWJGL.util.texture.Textures;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class Menu implements Entity {
 
-	private Texture labirinthum;
+	private Texture labyrinthum;
 	private Texture play;
 	private Texture intro;
 	private Texture about;
@@ -25,6 +30,9 @@ public class Menu implements Entity {
 	private int coordX, coordY;
 	
 	LoaderTexture loadtexture = new LoaderTexture();
+	Laby laby = new Laby();
+	Light light = new Light();
+	Util util = new Util();
 	
 	Logger logger = Logger.getLogger(Menu.class.getName());
 	
@@ -32,13 +40,16 @@ public class Menu implements Entity {
 		
 		// загружаем текстуры
 		initTextures();
+		// размерность - 2d
+		util.make2D();
+		// 
+		laby.init();
 		
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		// 2D режим
-		GL11.glOrtho(0, 1366, 0, 768, 1, -1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		// включение текстур
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		light.disablebluelamp();
+		light.disablegreenlamp();
+		light.disableredlamp();
+		
+		glDisable(GL_LIGHTING);
 	}
 
 	public void draw() {
@@ -46,21 +57,21 @@ public class Menu implements Entity {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		// координаты текстур
-		coordX = (Display.getDisplayMode().getWidth() - labirinthum.getImageWidth()) / 2;
+		coordX = (Display.getDisplayMode().getWidth() - labyrinthum.getImageWidth()) / 2;
 		coordY = 550;
 		
-		labirinthum.bind();
+		labyrinthum.bind();
 		
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glTexCoord2f(0, 1); GL11.glVertex2i(coordX, coordY); // top left
-			GL11.glTexCoord2f(0, 0); GL11.glVertex2i(coordX, coordY + labirinthum.getImageHeight()); // bottom left
-			GL11.glTexCoord2f(1, 0); GL11.glVertex2i(coordX + labirinthum.getImageWidth(), coordY + labirinthum.getImageHeight()); // bottom right
-			GL11.glTexCoord2f(1, 1); GL11.glVertex2i(coordX + labirinthum.getImageWidth(), coordY); // top right
+			GL11.glTexCoord2f(0, 1); GL11.glVertex2i(coordX - 5, coordY); // top left
+			GL11.glTexCoord2f(0, 0); GL11.glVertex2i(coordX - 5, coordY + labyrinthum.getImageHeight()); // bottom left
+			GL11.glTexCoord2f(1, 0); GL11.glVertex2i(coordX + labyrinthum.getImageWidth() - 5, coordY + labyrinthum.getImageHeight()); // bottom right
+			GL11.glTexCoord2f(1, 1); GL11.glVertex2i(coordX + labyrinthum.getImageWidth() - 5, coordY); // top right
 		GL11.glEnd();
 		
-		coordY -= labirinthum.getImageHeight();
+		coordY -= labyrinthum.getImageHeight();
 		coordY -= 100;
 		
 		play.bind();
@@ -102,9 +113,12 @@ public class Menu implements Entity {
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(0, 1); GL11.glVertex2i(coordX, coordY); // top left
 			GL11.glTexCoord2f(0, 0); GL11.glVertex2i(coordX, coordY + about.getImageHeight()); // bottom left
-			GL11.glTexCoord2f(1, 0); GL11.glVertex2i(coordX + about.getImageWidth(), coordY + labirinthum.getImageHeight()); // bottom right
+			GL11.glTexCoord2f(1, 0); GL11.glVertex2i(coordX + about.getImageWidth(), coordY + about.getImageHeight()); // bottom right
 			GL11.glTexCoord2f(1, 1); GL11.glVertex2i(coordX + about.getImageWidth(), coordY); // top right
 		GL11.glEnd();
+		
+		laby.draw();
+		laby.render();
 		
 	}
 
@@ -114,7 +128,8 @@ public class Menu implements Entity {
 	}
 
 	public void destroy() {
-		labirinthum.release();
+		
+		labyrinthum.release();
 		intro.release();
 		about.release();
 		play.release();
@@ -122,10 +137,10 @@ public class Menu implements Entity {
 	
 	public void initTextures() {
 		try {
-			labirinthum = loadtexture.readTexture(Textures.LABIRINTHUM.getName());
-			intro = loadtexture.readTexture(Textures.INTRO.getName());
-			about = loadtexture.readTexture(Textures.ABOUT.getName());
-			play = loadtexture.readTexture(Textures.PLAYGAME.getName());
+			labyrinthum = loadtexture.readTexturePNG(Textures.LABYRINTHUM.getName());
+			intro = loadtexture.readTexturePNG(Textures.INTRO.getName());
+			about = loadtexture.readTexturePNG(Textures.ABOUT.getName());
+			play = loadtexture.readTexturePNG(Textures.PLAYGAME.getName());
 		} catch (IOException e) {
 			
 			logger.log(Level.SEVERE, "Failed to load textures", e);
